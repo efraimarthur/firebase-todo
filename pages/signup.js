@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const SignUp = () => {
-  const { user, signup } = useAuth();
+  const { user, signup, logout } = useAuth();
   // console.log(user);
   const [data, setData] = useState({ name: "", email: "", password: "" });
 
@@ -14,6 +14,7 @@ const SignUp = () => {
     // console.log(data);
     try {
       await signup(data.email, data.password);
+      logout();
       router.push("/login");
     } catch (error) {
       console.log(error);
