@@ -1,7 +1,14 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/login");
+    // console.log(router.pathname);
+  });
   return (
     <div className="">
       <Head>
@@ -10,9 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <div className="text-sky-700 text-5xl">Hello</div>
-      </main>
+      <main className="bg-slate-900 min-h-screen"></main>
     </div>
   );
 }
