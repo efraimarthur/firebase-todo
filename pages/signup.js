@@ -1,21 +1,43 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { set, ref, getDatabase } from "firebase/database";
 
 const SignUp = () => {
   const { user, signup, logout } = useAuth();
-  // console.log(user);
+  console.log(user?.uid);
+  const [userLocal, setUserLocal] = useState("");
+
   const [data, setData] = useState({ name: "", email: "", password: "" });
 
   const router = useRouter();
 
-  const handleSignUp = async (event) => {
-    event.preventDefault();
-    // console.log(data);
-    try {
-      await signup(data.email, data.password);
+  const writeUserData = async () => {
+    const db = getDatabase();
+    console.log(user?.uid);
+    await set(ref(db, "users/" + userLocal), {
+      name: data.name,
+      email: data.email,
+    });
+  };
+
+  useEffect(() => {
+    if (userLocal) {
+      writeUserData();
       logout();
       router.push("/login");
+    }
+
+    console.log("user local updated");
+    console.log(userLocal);
+  }, [userLocal]);
+
+  const handleSignUp = async (user, event) => {
+    event.preventDefault();
+    try {
+      //passing the email and password to create user
+      const a = await signup(data.email, data.password);
+      setUserLocal(a.user.uid);
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +77,8 @@ const SignUp = () => {
         </div>
         <button
           className="mt-5 w-full bg-slate-900 text-slate-100 rounded-md p-2 my-10 hover:opacity-80 active:bg-slate-500"
-          onClick={(event) => handleSignUp(event)}
+          onClick={(event) => handleSignUp(user, event)}
+          // onClick={()=>console.log(user)}
         >
           Register
         </button>

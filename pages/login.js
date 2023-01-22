@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { set, ref, getDatabase } from "firebase/database";
 
 const Login = () => {
-  const { user, login } = useAuth();
+  const { user, login, logout } = useAuth();
   const [data, setData] = useState({ email: "", password: "" });
   const router = useRouter();
 
@@ -18,6 +19,13 @@ const Login = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      // logout();
+      router.push("/dashboard");
+    }
+  }, [user]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[url('/glum.jpg')] bg-cover bg-center">
