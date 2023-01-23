@@ -3,10 +3,13 @@ import { useAuth } from "../context/AuthContext";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, getDisplayName } = useAuth();
 
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
+  // console.log(currentUser);
+  const datas = currentUser.name;
+  console.log(datas);
 
   const readUserData = () => {
     //read data from db
@@ -35,7 +38,10 @@ const Dashboard = () => {
   useEffect(() => {
     readUserData();
     getCurrentUserData();
-  }, []);
+    if (datas) {
+      getDisplayName(datas);
+    }
+  }, [datas]);
 
   return (
     <div>

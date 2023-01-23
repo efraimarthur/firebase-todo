@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { set, ref, getDatabase } from "firebase/database";
+// import { set, ref, getDatabase } from "firebase/database";
 
 const Login = () => {
   const { user, login, logout } = useAuth();
@@ -11,9 +11,10 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    console.log("user: " + user);
+    // console.log("user: " + user);
     try {
       await login(data.email, data.password);
+      console.log("aneh");
       router.push("/dashboard");
     } catch (error) {
       console.log(error);

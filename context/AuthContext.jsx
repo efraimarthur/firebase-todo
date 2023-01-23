@@ -14,19 +14,27 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  // console.log(user);
+  console.log(user);
   const [displayName, setDisplayName] = useState("");
-  // console.log(displayName);
+  console.log(displayName);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       // console.log(user.displayName);
-      if (user && displayName) {
+      if (user) {
         setUser({
           uid: user.uid,
           email: user.email,
-          displayName: displayName,
+          displayName: "",
         });
+        if (displayName) {
+          setUser({
+            uid: user.uid,
+            email: user.email,
+            displayName: displayName,
+          });
+          console.log(displayName);
+        }
       } else {
         setUser(null);
       }
@@ -34,14 +42,10 @@ export const AuthContextProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [displayName]);
 
   const signup = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const getDisplayName = (name) => {
-    setDisplayName(name);
   };
 
   const login = (email, password) => {
@@ -51,6 +55,10 @@ export const AuthContextProvider = ({ children }) => {
   const logout = async () => {
     setUser(null);
     await signOut(auth);
+  };
+
+  const getDisplayName = (name) => {
+    setDisplayName(name);
   };
 
   return (

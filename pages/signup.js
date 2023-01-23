@@ -5,7 +5,7 @@ import { set, ref, getDatabase } from "firebase/database";
 
 const SignUp = () => {
   const { user, signup, logout, getDisplayName } = useAuth();
-  // console.log(user?.uid);
+  console.log(user?.uid);
   const [userLocal, setUserLocal] = useState("");
 
   const [data, setData] = useState({ name: "", email: "", password: "" });
