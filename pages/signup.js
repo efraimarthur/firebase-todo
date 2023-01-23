@@ -4,8 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { set, ref, getDatabase } from "firebase/database";
 
 const SignUp = () => {
-  const { user, signup, logout } = useAuth();
-  console.log(user?.uid);
+  const { user, signup, logout, getDisplayName } = useAuth();
+  // console.log(user?.uid);
   const [userLocal, setUserLocal] = useState("");
 
   const [data, setData] = useState({ name: "", email: "", password: "" });
@@ -27,9 +27,6 @@ const SignUp = () => {
       logout();
       router.push("/login");
     }
-
-    console.log("user local updated");
-    console.log(userLocal);
   }, [userLocal]);
 
   const handleSignUp = async (user, event) => {
@@ -37,6 +34,8 @@ const SignUp = () => {
     try {
       //passing the email and password to create user
       const a = await signup(data.email, data.password);
+      await getDisplayName(data.name);
+      // console.log(data.name);
       setUserLocal(a.user.uid);
     } catch (error) {
       console.log(error);

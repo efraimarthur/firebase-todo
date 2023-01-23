@@ -15,14 +15,17 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   // console.log(user);
+  const [displayName, setDisplayName] = useState("");
+  // console.log(displayName);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      // console.log(user.displayName);
+      if (user && displayName) {
         setUser({
           uid: user.uid,
           email: user.email,
-          // displayName: user.displayName,
+          displayName: displayName,
         });
       } else {
         setUser(null);
@@ -37,6 +40,10 @@ export const AuthContextProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
+  const getDisplayName = (name) => {
+    setDisplayName(name);
+  };
+
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
@@ -47,7 +54,9 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, signup, logout, getDisplayName }}
+    >
       {loading ? null : children}
     </AuthContext.Provider>
   );

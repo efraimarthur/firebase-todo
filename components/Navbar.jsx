@@ -15,15 +15,18 @@ const Navbar = () => {
 
       <div className="flex gap-5">
         {user ? (
-          <button
-            onClick={() => {
-              logout();
-              router.push("/login");
-            }}
-            className="px-2 py-1"
-          >
-            Logout
-          </button>
+          <>
+            <div className="px-2 py-1">Login as : {user.displayName}</div>
+            <button
+              onClick={() => {
+                logout();
+                router.push("/login");
+              }}
+              className="px-2 py-1"
+            >
+              Logout
+            </button>
+          </>
         ) : (
           <>
             <Link href={"/signup"} className=" px-2 py-1">
