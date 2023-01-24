@@ -14,9 +14,9 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(user);
+  // console.log(user);
   const [displayName, setDisplayName] = useState("");
-  console.log(displayName);
+  // console.log(displayName);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -33,7 +33,7 @@ export const AuthContextProvider = ({ children }) => {
             email: user.email,
             displayName: displayName,
           });
-          console.log(displayName);
+          // console.log(displayName);
         }
       } else {
         setUser(null);

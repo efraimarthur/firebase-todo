@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-// import { set, ref, getDatabase } from "firebase/database";
 
 const Login = () => {
-  const { user, login, logout } = useAuth();
+  const { user, login } = useAuth();
   const [data, setData] = useState({ email: "", password: "" });
   const router = useRouter();
 
@@ -14,7 +13,6 @@ const Login = () => {
     // console.log("user: " + user);
     try {
       await login(data.email, data.password);
-      console.log("aneh");
       router.push("/dashboard");
     } catch (error) {
       console.log(error);
@@ -23,7 +21,6 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      // logout();
       router.push("/dashboard");
     }
   }, [user]);

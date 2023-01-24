@@ -5,7 +5,7 @@ import { set, ref, getDatabase } from "firebase/database";
 
 const SignUp = () => {
   const { user, signup, logout, getDisplayName } = useAuth();
-  console.log(user?.uid);
+  // console.log(user?.uid);
   const [userLocal, setUserLocal] = useState("");
 
   const [data, setData] = useState({ name: "", email: "", password: "" });
@@ -14,16 +14,34 @@ const SignUp = () => {
 
   const writeUserData = async () => {
     const db = getDatabase();
-    console.log(user?.uid);
+    // console.log(user?.uid);
     await set(ref(db, "users/" + userLocal), {
       name: data.name,
       email: data.email,
     });
   };
 
+  const addTodo = () => {
+    const randomString = Math.random().toString(36).substring(2, 12);
+    const db = getDatabase();
+    const CapitalizeName =
+      data.name.charAt(0).toUpperCase() + data.name.slice(1);
+    console.log(CapitalizeName);
+
+    set(ref(db, "todo/" + user.uid + "/running" + "/" + randomString), {
+      title: "Welcome, its Title",
+      description: `Description : Hello my name is ${CapitalizeName}`,
+    });
+    // console.log(data.title);
+    // console.log(data.description);
+    // setTodoId(todoId + 1);
+    // console.log(todoId);
+  };
+
   useEffect(() => {
     if (userLocal) {
       writeUserData();
+      addTodo();
       logout();
       router.push("/login");
     }
