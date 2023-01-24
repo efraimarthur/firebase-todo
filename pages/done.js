@@ -5,12 +5,11 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/router";
 
-const Dashboard = () => {
+const Done = () => {
   const { user, getDisplayName, logout } = useAuth();
   const router = useRouter();
-
-  const [currentUser, setCurrentUser] = useState("");
-  const userName = currentUser.name;
+  //   const [currentUser, setCurrentUser] = useState("");
+  //   const userName = currentUser.name;
   const [data, setData] = useState({
     title: "",
     description: "",
@@ -20,20 +19,9 @@ const Dashboard = () => {
   const [todo, setTodo] = useState("");
   const [modal, setModal] = useState(false);
 
-  // console.log(todo);
-
-  const getCurrentUserData = () => {
-    const db = getDatabase();
-    const userRef = ref(db, "users/" + user.uid);
-    onValue(userRef, (snapshot) => {
-      const rawData = snapshot.val();
-      setCurrentUser(rawData);
-    });
-  };
-
   const getTodo = async () => {
     const db = getDatabase();
-    const todoRef = ref(db, "todo/" + user.uid + "/running");
+    const todoRef = ref(db, "todo/" + user.uid + "/done");
     onValue(todoRef, (snapshot) => {
       const rawData = snapshot.val();
       const arrData = [];
@@ -74,15 +62,15 @@ const Dashboard = () => {
   };
 
   const onDoneTodo = async (item) => {
-    //change from running ref to done ref in the same uid ref
+    //change from done ref to running ref in the same uid ref
     try {
-      //delete from running ref
+      //write to done ref
       const itemId = item.id;
       const db = getDatabase();
-      remove(ref(db, "todo/" + user.uid + "/running/" + itemId));
+      remove(ref(db, "todo/" + user.uid + "/done/" + itemId));
 
-      //write to done ref
-      set(ref(db, "todo/" + user.uid + "/done" + "/" + itemId), {
+      //delete from running ref
+      set(ref(db, "todo/" + user.uid + "/running" + "/" + itemId), {
         title: item.title,
         description: item.description,
       });
@@ -92,21 +80,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // readUserData();
-    if (user.displayName) {
-      getCurrentUserData();
-    }
-    if (userName) {
-      getDisplayName(userName);
-    }
-
-    // if (todoLength) {
-    //   setTodoId(todoLength);
-    //   console.log(todoLength);
-    // }
-
     getTodo();
-  }, [userName, user]);
+  }, []);
 
   const toggleModal = () => {
     setModal(!modal);
@@ -199,19 +174,19 @@ const Dashboard = () => {
               <div className="text-sky-400 font-mono text-2xl mx-auto cursor-default w-[90%] flex items-center justify-center px-5 py-2 flex-col ">
                 <Icon icon="mdi:face-man-profile" className="text-6xl mr-2" />
                 <p className="capitalize relative before:absolute before:inset-0 before:border-b-[1.5px] before:border-sky-500 before:-skew-y-[4deg]">
-                  {userName}
+                  {user.displayName}
                 </p>
               </div>
               <Link
                 href={"/dashboard"}
-                className="text-slate-50 text-xl bg-slate-500 cursor-pointer mx-auto h-16 w-[90%] flex items-center justify-center px-5 py-2 rounded-md hover:bg-sky-400"
+                className="text-slate-50 text-xl bg-slate-700 cursor-pointer mx-auto h-16 w-[90%] flex items-center justify-center px-5 py-2 rounded-md hover:bg-sky-400"
               >
                 <Icon icon="ic:baseline-home" className="mr-1 text-2xl" />
                 <span>Home</span>
               </Link>
               <Link
                 href={"/done"}
-                className="text-slate-50 text-xl bg-slate-700 cursor-pointer mx-auto h-16 w-[90%] flex items-center justify-center px-5 py-2 rounded-md hover:bg-sky-400"
+                className="text-slate-50 text-xl bg-slate-500 cursor-pointer mx-auto h-16 w-[90%] flex items-center justify-center px-5 py-2 rounded-md hover:bg-sky-400"
               >
                 <Icon
                   icon="ic:baseline-library-add-check"
@@ -221,7 +196,7 @@ const Dashboard = () => {
               </Link>
               <button
                 // href={"/add"}
-                className="text-slate-50 text-xl bg-slate-700 cursor-pointer mx-auto h-16 w-[90%] flex items-center justify-center px-5 py-2 rounded-md hover:bg-sky-400"
+                className="text-slate-50 text-xl bg-slate-700 cursor-pointer mx-auto h-16 w-[90%] flex items-center justify-center px-5 py-2 rounded-md hover:bg-sky-500"
                 onClick={toggleModal}
               >
                 <Icon
@@ -263,14 +238,14 @@ const Dashboard = () => {
                     {/* <div className="text-rose-500">{`${item.isDone}`}</div> */}
                     <div className="flex absolute gap-1 bottom-3 left-1/2 -translate-x-1/2">
                       <button
-                        className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-emerald-400 duration-200 flex items-center justify-center"
+                        className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-yellow-400 duration-200 flex items-center justify-center"
                         onClick={() => onDoneTodo(item)}
                       >
                         <Icon
-                          icon="mdi:success-circle"
+                          icon="ion:arrow-undo-circle-sharp"
                           className="mr-1 text-2xl"
                         />
-                        Done
+                        Undone
                       </button>
                       <button
                         className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-rose-400 duration-200 flex items-center justify-center "
@@ -278,7 +253,7 @@ const Dashboard = () => {
                       >
                         <Icon
                           icon="material-symbols:delete-sharp"
-                          className="mr-1 text-2xl"
+                          className="mr-1 text-2xl "
                         />
                         Delete
                       </button>
@@ -293,4 +268,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Done;
