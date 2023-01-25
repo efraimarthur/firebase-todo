@@ -113,15 +113,11 @@ const Dashboard = () => {
 
   const toggleModal = () => {
     setModal(!modal);
-    setNav(!nav);
+    setNav(false);
   };
   const navToggle = () => {
     setNav(!nav);
-    console.log(nav);
-  };
-
-  const toggleMobileModal = () => {
-    setModal(!modal);
+    // console.log(nav);
   };
 
   return (
@@ -312,57 +308,62 @@ const Dashboard = () => {
                     </button>
                   </ul>
 
-                  <div className="px-3 mb-10 py-2 text-center text-lg rounded-lg bg-slate-600 text-slate-50">
+                  <button
+                    className="px-3 mb-10 py-2 text-center text-lg rounded-lg bg-slate-600 text-slate-50"
+                    onClick={() => {
+                      logout();
+                      router.push("/login");
+                    }}
+                  >
                     Logout
-                  </div>
+                  </button>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-5 p-10 w-full md:w-[75%] absolute right-0 bg-slate-800">
-            <p className="absolute text-[1.5em] text-slate-100 mt-5">
-              {" "}
-              Todo List :{" "}
-            </p>
-            {todo
-              ? todo.map((item, index) => (
-                  <>
-                    <div
-                      className="bg-slate-700 text-slate-50 p-3 shadow-lg flex flex-col rounded-md aspect-square hover:scale-105 duration-300 my-5 relative w-[30%] mx-auto hover:bg-slate-600 mt-20"
-                      key={item.id}
-                    >
-                      <div className="text-xl font-bold w-full border-b border-b-slate-500">
-                        {item.title}
+          {/* Content */}
+          <div className=" w-full md:w-[75%] absolute right-0 bg-slate-800">
+            <div className="mt-10 md:mt-0 flex flex-wrap gap-0 md:gap-5 p-5 md:p-10">
+              {todo
+                ? todo.map((item, index) => (
+                    <>
+                      <div
+                        className="bg-slate-700 text-slate-50 p-3 shadow-lg flex flex-col rounded-md aspect-square hover:scale-105 duration-300 my-5 relative w-full sm:w-[30%] mx-auto hover:bg-slate-600 "
+                        key={item.id}
+                      >
+                        <div className="text-xl font-bold w-full border-b border-b-slate-500">
+                          {item.title}
+                        </div>
+                        <div className="text-lg">{item.description}</div>
+                        {/* <div className="text-rose-500">{`${item.isDone}`}</div> */}
+                        <div className="flex absolute gap-1 bottom-3 left-1/2 -translate-x-1/2">
+                          <button
+                            className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-emerald-400 duration-200 flex items-center justify-center"
+                            onClick={() => onDoneTodo(item)}
+                          >
+                            <Icon
+                              icon="mdi:success-circle"
+                              className="mr-1 text-2xl"
+                            />
+                            Done
+                          </button>
+                          <button
+                            className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-rose-400 duration-200 flex items-center justify-center "
+                            onClick={() => deleteTodo(item)}
+                          >
+                            <Icon
+                              icon="material-symbols:delete-sharp"
+                              className="mr-1 text-2xl"
+                            />
+                            Delete
+                          </button>
+                        </div>
                       </div>
-                      <div className="text-lg">{item.description}</div>
-                      {/* <div className="text-rose-500">{`${item.isDone}`}</div> */}
-                      <div className="flex absolute gap-1 bottom-3 left-1/2 -translate-x-1/2">
-                        <button
-                          className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-emerald-400 duration-200 flex items-center justify-center"
-                          onClick={() => onDoneTodo(item)}
-                        >
-                          <Icon
-                            icon="mdi:success-circle"
-                            className="mr-1 text-2xl"
-                          />
-                          Done
-                        </button>
-                        <button
-                          className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-rose-400 duration-200 flex items-center justify-center "
-                          onClick={() => deleteTodo(item)}
-                        >
-                          <Icon
-                            icon="material-symbols:delete-sharp"
-                            className="mr-1 text-2xl"
-                          />
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                ))
-              : null}
+                    </>
+                  ))
+                : null}
+            </div>
           </div>
         </div>
       </div>
