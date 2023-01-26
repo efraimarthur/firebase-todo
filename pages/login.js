@@ -27,7 +27,7 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[url('/glum.jpg')] bg-cover bg-center">
-      <form className=" w-[400px] p-5 backdrop-blur-md bg-slate-400 bg-opacity-30 text-slate-50 rounded-md ">
+      <form className=" md:w-[400px] w-[95%] p-5 backdrop-blur-md bg-slate-400 bg-opacity-30 text-slate-50 rounded-md ">
         <h1 className="text-2xl font-bold text-center">Login</h1>
         <div className="mt-5">
           <label className="block">Email</label>

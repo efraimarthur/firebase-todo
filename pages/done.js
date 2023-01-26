@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/router";
 
-const Done = () => {
+const Dashboard = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -13,15 +13,13 @@ const Done = () => {
     title: "",
     description: "",
   });
-  // const [todoLength, setTodoLength] = useState();
-  // const [todoId, setTodoId] = useState(null);
   const [todo, setTodo] = useState("");
   const [modal, setModal] = useState(false);
   const [nav, setNav] = useState(false);
 
   // console.log(todo);
 
-  const getDoneTodo = async () => {
+  const getTodo = async () => {
     const db = getDatabase();
     const todoRef = ref(db, "todo/" + user.uid + "/done");
     onValue(todoRef, (snapshot) => {
@@ -35,7 +33,6 @@ const Done = () => {
           : null;
       }
       setTodo(arrData);
-      // setTodoLength(!rawData?.length ? 1 : rawData.length);
     });
   };
 
@@ -47,10 +44,6 @@ const Done = () => {
       description: data.description,
     });
     setModal(!modal);
-    // console.log(data.title);
-    // console.log(data.description);
-    // setTodoId(todoId + 1);
-    // console.log(todoId);
   };
 
   const deleteDoneTodo = async (item) => {
@@ -63,8 +56,8 @@ const Done = () => {
     }
   };
 
-  const onUnDoneTodo = async (item) => {
-    //change from *done* ref to *running* ref in the same uid ref
+  const onUndoneTodo = async (item) => {
+    //change from done ref to running ref in the same uid ref
     try {
       //delete from running ref
       const itemId = item.id;
@@ -82,7 +75,7 @@ const Done = () => {
   };
 
   useEffect(() => {
-    getDoneTodo();
+    getTodo();
   }, [user]);
 
   const toggleModal = () => {
@@ -230,16 +223,19 @@ const Done = () => {
             </div>
           </div>
 
-          {/* Mobile Nav */}
-          <div className="container flex md:hidden flex-wrap items-center justify-between w-full fixed bg-slate-900 z-50 px-4 py-1">
-            <a href="https://flowbite.com/" className="flex items-center">
-              <span className="self-center text-xl font-semibold whitespace-nowrap flex items-center capitalize text-sky-400">
-                <Icon icon="mdi:face-man-profile" className="mr-2 text-3xl" />
-                {user.displayName}
-              </span>
-            </a>
+          {/* MobileNav */}
+          <div
+            className={`container flex md:hidden flex-wrap items-center bg-slate-900  justify-between w-full fixed z-50 py-1 ${
+              nav && "bg-opacity-90"
+            }`}
+          >
+            <span className=" ml-5 text-xl font-semibold whitespace-nowrap flex items-center capitalize text-sky-400">
+              <Icon icon="mdi:face-man-profile" className="mr-2 text-3xl" />
+              {user.displayName}
+            </span>
+
             <button
-              className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              className="mr-2 inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               onClick={navToggle}
             >
               <span className="sr-only">Open main menu</span>
@@ -258,40 +254,45 @@ const Done = () => {
               </svg>
             </button>
             {nav && (
-              <div className="w-full md:block md:w-auto h-screen z-50">
-                <div className="flex flex-col justify-between p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 h-[80vh]">
-                  <ul className="flex flex-col">
+              <div className="w-full md:block md:w-auto h-screen z-50 flex justify-start bg-sky-300 bg-opacity-10">
+                <div
+                  className={`flex flex-col justify-between border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white bg-slate-800 md:dark:bg-gray-900 dark:border-gray-700 h-[100%] w-[70%]`}
+                >
+                  <ul className="flex flex-col pt-5">
                     <Link
                       href={"/dashboard"}
-                      className="text-slate-50 text-lg bg-slate-700 cursor-pointer mx-auto h-10 flex w-full items-center px-5 py-2  hover:bg-sky-400"
+                      className="text-slate-50 text-lg cursor-pointer mx-auto h-10 flex w-full items-center  px-5 py-2  hover:bg-sky-400 ml-1"
                     >
                       <span>Home</span>
                     </Link>
                     <Link
                       href={"/done"}
-                      className="text-slate-50 text-lg bg-slate-500 cursor-pointer mx-auto h-10 flex w-full items-center px-5 py-2  hover:bg-sky-400"
+                      className="text-slate-50 text-lg  cursor-pointer mx-auto h-10 flex w-full items-center px-5 py-2  hover:bg-sky-400 border-l-4 border-l-sky-500 bg-sky-400 bg-opacity-25"
                     >
                       Done
                     </Link>
                     <button
                       // href={"/add"}
-                      className="text-slate-50 text-lg bg-slate-700 cursor-pointer mx-auto h-10 flex w-full items-center px-5 py-2 hover:bg-sky-400"
+                      className="text-slate-50 text-lg  cursor-pointer mx-auto h-10 flex w-full items-center px-5 py-2 hover:bg-sky-400 ml-1"
                       onClick={toggleModal}
                     >
                       <span>Add new</span>
                     </button>
+                    <button
+                      className="py-1 text-lg flex items-center justify-start px-5 text-slate-50 mt-14 ml-1"
+                      onClick={() => {
+                        logout();
+                        router.push("/login");
+                      }}
+                    >
+                      Logout
+                    </button>
                   </ul>
-
-                  <button
-                    className="px-3 mb-10 py-2 text-center text-lg rounded-lg bg-slate-600 text-slate-50"
-                    onClick={() => {
-                      logout();
-                      router.push("/login");
-                    }}
-                  >
-                    Logout
-                  </button>
                 </div>
+                <button
+                  className="h-[100%] w-[30%] text-slate-100"
+                  onClick={() => setNav(!nav)}
+                ></button>
               </div>
             )}
           </div>
@@ -313,8 +314,8 @@ const Done = () => {
                         {/* <div className="text-rose-500">{`${item.isDone}`}</div> */}
                         <div className="flex absolute gap-1 bottom-3 left-1/2 -translate-x-1/2">
                           <button
-                            className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-emerald-400 duration-200 flex items-center justify-center"
-                            onClick={() => onUnDoneTodo(item)}
+                            className="bg-slate-900 py-2 px-3 rounded-xl hover:bg-orange-400 duration-200 flex items-center justify-center"
+                            onClick={() => onUndoneTodo(item)}
                           >
                             <Icon
                               icon="ion:arrow-undo-circle"
@@ -345,4 +346,4 @@ const Done = () => {
   );
 };
 
-export default Done;
+export default Dashboard;
